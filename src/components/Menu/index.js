@@ -1,5 +1,5 @@
 import React from 'react';
-import Logo from '../../assets/imagens/logos-sexflix-e-netflix.jpg'
+import Logo from '../../assets/imagens/logo.jpg'
 import './Menu.css';
 import Button from '../Button';
 //import ButtonLink from './components/ButtonLink';
@@ -13,7 +13,7 @@ function Menu() {
             </a>
 
             <Button as="a" className="ButtonLink" href="/">
-                Novo vídeo2
+                Novo vídeo
             </Button>
         </nav>
 
