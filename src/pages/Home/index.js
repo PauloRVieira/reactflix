@@ -1,13 +1,12 @@
 import React from 'react';
-import Menu from './components/Menu'
-import DadosIniciais from './data/dados_iniciais.json';
-import BannerMain from './components/BannerMain';
-import Carousel from './components/Carousel';
+import DadosIniciais from '../../data/dados_iniciais.json';
+import BannerMain from '../../components/BannerMain';
+import Carousel from '../../components/Carousel';
+import PageDefault from '../../components/PageDefault';
 
-function App() {
+function Home() {
   return (
-    <div>
-      <Menu />
+    <PageDefault>
 
       <BannerMain
         videoTitle={DadosIniciais.categorias[0].videos[0].titulo}
@@ -35,9 +34,8 @@ function App() {
         category={DadosIniciais.categorias[3]}
       />
 
-
-    </div>
+    </PageDefault>
   );
 }
 
-export default App;
+export default Home;
