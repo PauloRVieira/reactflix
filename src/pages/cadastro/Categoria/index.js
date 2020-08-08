@@ -1,104 +1,121 @@
-import React, { useState } from 'react';
-import PageDefault from '../../../components/PageDefault';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import PageDefault from '../../../components/PageDefault';
 import FormField from '../../../components/FormField';
+import Button from '../../../components/Button';
 
 function CadastroCategoria() {
-
   const valoresIniciais = {
     nome: '',
     descricao: '',
     cor: '',
-  }
+  };
 
   const [categorias, setCategorias] = useState([]);
 
   const [values, setValues] = useState(valoresIniciais);
 
   function setValue(chave, valor) {
-    //chave é dinâmico, pode ser nome, descricao, cor, bla, bli
+    // chave é dinâmico, pode ser nome, descricao, cor, bla, bli
     setValues({
       ...values,
-      [chave]: valor, //[chave] "traduz" para nome: '<valor>' ou descricao: '<valor>' ou bla: '<valor>'
-    })
+      [chave]: valor, // [chave] "traduz" em nome: '<valor>' / descricao: '<valor>' / bla: '<valor>'
+    });
   }
-  
-  function handleChange(info) {
-    const { value } = info.target;
-    const { getAttribute } = info.target;
 
+  function handleChange(info) {
     setValue(
-      info.target.getAttribute('name'), value
+      info.target.getAttribute('name'), info.target.value,
     );
   }
 
+  useEffect(
+    () => {
+      console.log('alo alo');
+      const URL_TOP = 'http://localhost:8080/categorias';
+      fetch(URL_TOP)
+        .then(async (respostadoServidor) => {
+          const resposta = await respostadoServidor.json();
+          setCategorias([
+            ...resposta,
+          ]);
+        });
+      });
+      
   return (
     <PageDefault>
-      <h1>Cadastro de Categoria: {values.nome}</h1>
+      <h1>
+        Cadastro de Categoria:
+        {values.nome}
+      </h1>
 
-      <form onSubmit={ (info) => {
+      <form onSubmit={(info) => {
         info.preventDefault();
         setCategorias([
           ...categorias,
-          values
+          values,
         ]);
 
         setValues([valoresIniciais]);
-      }}>
+      }}
+      >
 
-      <FormField
-        input="text"
-        label="Nome da Categoria:"
-        type="text"
-        name="nome"
-        value={values.nome}
-        onChange={handleChange}
-      />
+        <FormField
+          input="text"
+          label="Nome da Categoria:"
+          type="text"
+          name="nome"
+          value={values.nome}
+          onChange={handleChange}
+        />
 
-      <FormField
-        input="textarea"
-        label="Descrição:"
-        type="textarea"
-        value={values.descricao}
-        name="descricao"
-        onChange={handleChange}
-      />
-      
-      <FormField
-        input="text"
-        label="Cor:"
-        type="color"
-        value={values.cor}
-        name="cor"
-        onChange={handleChange}
-      />
-      
-      <div>
+        <FormField
+          input="textarea"
+          label="Descrição:"
+          type="textarea"
+          value={values.descricao}
+          name="descricao"
+          onChange={handleChange}
+        />
 
-        <button>
-          Cadastrar
-        </button>
+        <FormField
+          input="text"
+          label="Cor:"
+          type="color"
+          value={values.cor}
+          name="cor"
+          onChange={handleChange}
+        />
 
-      </div>
+        <div>
+
+          <Button>
+            Cadastrar
+          </Button>
+
+        </div>
 
       </form>
 
+      {categorias.length === 0 && (
+      <div>
+        Loading..
+      </div>
+      )}
+
       <ul>
-        {categorias.map( (categoria, index) => {
-          return (
-            <li key={`${categoria}${index}`}>
-              {categoria.nome}
-            </li>
-          )
-        })}
+        {categorias.map((categoria, index) => (
+          <li key={`${categoria}${index}`}>
+            {categoria.nome}
+          </li>
+        ))}
       </ul>
 
-      <Link to="/" >
+      <Link to="/">
         Ir para a Home
       </Link>
     </PageDefault>
   );
-
 }
-  
+
 export default CadastroCategoria;
