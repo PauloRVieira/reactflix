@@ -31,8 +31,7 @@ function CadastroCategoria() {
 
   useEffect(
     () => {
-      console.log('alo alo');
-      const URL_TOP = 'http://localhost:8080/categorias';
+      const URL_TOP = window.location.hostname.includes('localhost') ? 'http://localhost:8080/categorias' : 'https://paulovieiraflix.herokuapp.com/categorias';
       fetch(URL_TOP)
         .then(async (respostadoServidor) => {
           const resposta = await respostadoServidor.json();
@@ -40,8 +39,9 @@ function CadastroCategoria() {
             ...resposta,
           ]);
         });
-      });
-      
+    },
+  );
+
   return (
     <PageDefault>
       <h1>
