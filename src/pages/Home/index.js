@@ -1,25 +1,55 @@
-import React from 'react';
-import DadosIniciais from '../../data/dados_iniciais.json';
+import React, { useEffect, useState } from 'react';
 import BannerMain from '../../components/BannerMain';
 import Carousel from '../../components/Carousel';
 import PageDefault from '../../components/PageDefault';
+import categoriasRepository from '../../repositories/categorias';
 
 function Home() {
+  const [dadosIniciais, setDadosIniciais] = useState({
+    categorias: [],
+  });
+
+  useEffect(() => {
+    categoriasRepository.getAllWithVideos()
+      .then((categoriasComVideos) => {
+        setDadosIniciais(categoriasComVideos);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
   return (
-    <PageDefault>
+    <PageDefault paddingAll={0}>
+      {dadosIniciais.length === 0 && (<div>Loading...</div>)}
 
-      <BannerMain
-        videoTitle={DadosIniciais.categorias[0].videos[0].titulo}
-        url={DadosIniciais.categorias[0].videos[0].url}
-        videoDescription={DadosIniciais.categorias[0].videos[0].videoDescription}
-      />
+      {dadosIniciais.length > 0 && dadosIniciais.map((categoria, indice) => {
+        if (indice === 0) {
+          return (
+            <div key={categoria.id}>
+              <BannerMain
+                videoTitle={dadosIniciais[0].videos[0].titulo}
+                url={dadosIniciais[0].videos[0].url}
+                videoDescription={dadosIniciais[0].videos[0].videoDescription}
+              />
+              <Carousel
+                ignoreFirstVideo
+                category={dadosIniciais[0]}
+              />
+            </div>
+          );
+        }
 
-      <Carousel
-        ignoreFirstVideo
-        category={DadosIniciais.categorias[0]}
-      />
+        return (
+          <Carousel
+            key={categoria.id}
+            category={categoria}
+          />
+        );
+      })}
+      ;
 
-      <Carousel
+      {/* <Carousel
         ignoreFirstVideo
         category={DadosIniciais.categorias[1]}
       />
@@ -32,7 +62,7 @@ function Home() {
       <Carousel
         ignoreFirstVideo
         category={DadosIniciais.categorias[3]}
-      />
+      /> */}
 
     </PageDefault>
   );
